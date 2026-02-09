@@ -74,3 +74,122 @@ Migrate all screens in `com.company.myapp.screen.sample` package.
 ```
 Migrate all screens.
 ```
+
+## Claude Code Skills
+
+This project includes a set of Claude Code skills (slash commands) that streamline the migration workflow. Skills are located in `workspace/.claude/skills/` and can be invoked via `/skill-name` in Claude Code.
+
+### `/init-migration [source-project-folder]`
+
+**Starting point for any migration.** Analyzes the Jmix 1.x source project and produces a structured `PLAN.md`.
+
+What it does:
+- Scans `jmix1-source/` for source projects
+- Collects statistics: entities, screens, services, security roles, fragments, add-ons
+- If multiple modules found — asks which one to start with
+- Checks if a corresponding target Jmix 2.x project exists in `jmix2-target/`
+- If no target project — warns and asks to generate one via Jmix Studio
+- Generates `PLAN.md` with a wave-by-wave migration roadmap
+
+Example:
+```
+/init-migration myapp
+```
+
+### `/sequential-migration [source-folder] [target-folder]`
+
+**Main workflow skill.** Runs a full migration wave by wave, from entities to security.
+
+What it does:
+- Follows the 6-wave migration strategy from `AGENTS.md`
+- Reads the appropriate migration-rules documents before each wave
+- Asks for confirmation before starting each wave
+- Tracks progress in `PLAN.md`
+- Suggests splitting large waves by package
+
+Waves: Entities → Fetch Plans → Business Logic → Fragments → Screens → Security
+
+Example:
+```
+/sequential-migration myapp myapp-jmix2
+```
+
+### `/migrate-entity [entity-name-or-path]`
+
+**Targeted entity migration.** Migrates a single entity class or a package of entities.
+
+What it does:
+- `javax.persistence.*` → `jakarta.persistence.*`
+- `java.util.Date` → `java.time.*` (with proper type selection)
+- Removes `@Temporal` annotations
+- Adds `@DependsOnProperties` to `@InstanceName` methods
+- Validates the result via IntelliJ inspections
+
+Example:
+```
+/migrate-entity Owner
+/migrate-entity entity.owner
+```
+
+### `/migrate-view [screen-id-or-class-name]`
+
+**Targeted screen-to-view migration.** Converts a Classic UI screen into a Flow UI view.
+
+What it does:
+- Migrates Java controller: annotations, base class, event handlers, injections
+- Migrates XML descriptor: root element, components, actions, layout
+- Renames files and packages (`screen/` → `view/`, `*Browse` → `*ListView`)
+- Handles component mapping (table → dataGrid, groupBox → details, lookupField → entityComboBox, etc.)
+
+Example:
+```
+/migrate-view petclinic_Owner.browse
+/migrate-view OwnerBrowse
+/migrate-view screen.owner
+```
+
+### `/migrate-security [role-class-name]`
+
+**Security roles migration.** Converts security annotations and adds required permissions.
+
+What it does:
+- `@ScreenPolicy` → `@ViewPolicy`, updates screen IDs (`.browse` → `.list`, `.edit` → `.detail`)
+- Creates `UiMinimalRole` with mandatory `ui.loginToUi` permission
+- Migrates row-level roles (import changes only)
+- Warns about database-stored roles that need SQL migration
+
+Example:
+```
+/migrate-security VeterinarianRole
+/migrate-security all
+```
+
+### `/validate-migration [wave-name-or-all]`
+
+**Quality gate.** Verifies migration completeness and correctness.
+
+What it does:
+- Compares source vs target: lists missing entities, views, services, roles
+- Checks for leftover `javax.*` imports and Classic UI patterns in target
+- Audits all `// TODO: migration` comments
+- Runs build validation via IntelliJ
+- Generates a structured report with completion percentage
+
+Example:
+```
+/validate-migration entities
+/validate-migration all
+```
+
+### Recommended workflow
+
+```
+1.  /init-migration myapp            # Analyze and plan
+2.  /sequential-migration myapp myapp-jmix2   # Start wave-by-wave migration
+    # ...or use targeted skills for specific items:
+    /migrate-entity Owner
+    /migrate-view petclinic_Owner.browse
+3.  /validate-migration all           # Check completeness
+4.  /migrate-security all             # Migrate security last
+5.  /validate-migration all           # Final check
+```
