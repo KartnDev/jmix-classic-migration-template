@@ -4,22 +4,6 @@ This repository is designed to facilitate migration of application projects from
 
 Below we assume you are using Claude Code, but other agents should work as well.
 
-## Key Differences: Jmix 1 vs Jmix 2
-
-| Aspect             | Jmix 1.x                          | Jmix 2.x                            |
-|--------------------|-----------------------------------|-------------------------------------|
-| **Vaadin**         | Vaadin 8 (Classic UI)             | Vaadin 24 (Flow UI)                 |
-| **Persistence**    | `javax.persistence.*`             | `jakarta.persistence.*`             |
-| **Validation**     | `javax.validation.*`              | `jakarta.validation.*`              |
-| **UI Package**     | `io.jmix.ui.*`                    | `io.jmix.flowui.*`                  |
-| **Screen Package** | `screen` folder                   | `view` folder                       |
-| **Browse Screen**  | `StandardLookup`, `*Browse`       | `StandardListView`, `*ListView`     |
-| **Edit Screen**    | `StandardEditor`, `*Edit`         | `StandardDetailView`, `*DetailView` |
-| **Tables**         | `table`, `groupTable`             | `dataGrid`                          |
-| **Filter**         | `filter`                          | `genericFilter`                     |
-| **XML Root**       | `<window>`                        | `<view>`                            |
-| **XML Schema**     | `http://jmix.io/schema/ui/window` | `http://jmix.io/schema/flowui/view` |
-
 ## Migration process
 
 ### Setup
@@ -181,7 +165,7 @@ Example:
 /validate-migration all
 ```
 
-### Recommended workflow
+## Recommended workflow
 
 ```
 1.  /init-migration myapp            # Analyze and plan
@@ -193,3 +177,19 @@ Example:
 4.  /migrate-security all             # Migrate security last
 5.  /validate-migration all           # Final check
 ```
+
+## Key Differences: Jmix 1 vs Jmix 2
+
+| Aspect             | Jmix 1.x                          | Jmix 2.x                            |
+|--------------------|-----------------------------------|-------------------------------------|
+| **Vaadin**         | Vaadin 8 (Classic UI)             | Vaadin 24 (Flow UI)                 |
+| **Persistence**    | `javax.persistence.*`             | `jakarta.persistence.*`             |
+| **Validation**     | `javax.validation.*`              | `jakarta.validation.*`              |
+| **UI Package**     | `io.jmix.ui.*`                    | `io.jmix.flowui.*`                  |
+| **Screen Package** | `screen` folder                   | `view` folder                       |
+| **Browse Screen**  | `StandardLookup`, `*Browse`       | `StandardListView`, `*ListView`     |
+| **Edit Screen**    | `StandardEditor`, `*Edit`         | `StandardDetailView`, `*DetailView` |
+| **Tables**         | `table`, `groupTable`             | `dataGrid`                          |
+| **Filter**         | `filter`                          | `genericFilter`                     |
+| **XML Root**       | `<window>`                        | `<view>`                            |
+| **XML Schema**     | `http://jmix.io/schema/ui/window` | `http://jmix.io/schema/flowui/view` |

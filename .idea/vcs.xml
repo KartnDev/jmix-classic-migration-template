@@ -2,9 +2,5 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/workspace/jmix1-source/jmix-bookstore" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/workspace/jmix1-source/jmix-petclinic" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/workspace/jmix2-target/jmix-bookstore-2" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/workspace/jmix2-target/jmix-petclinic-2" vcs="Git" />
   </component>
 </project>
